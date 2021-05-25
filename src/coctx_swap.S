@@ -20,10 +20,10 @@
 #if !defined( __APPLE__ )
 .type  coctx_swap, @function
 #endif
-coctx_swap:
+coctx_swap:   //函数coctx_swap
 
 #if defined(__i386__)
-    movl 4(%esp), %eax
+    movl 4(%esp), %eax    //sp 将第一个参数也就是当前协程信息的地址保存下来
     movl %esp,  28(%eax)
     movl %ebp, 24(%eax)
     movl %esi, 20(%eax)
@@ -31,8 +31,9 @@ coctx_swap:
     movl %edx, 12(%eax)
     movl %ecx, 8(%eax)
     movl %ebx, 4(%eax)
-
-
+//上面会保存当前协程的寄存器信息
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//下面加载将要执行的协程的寄存器信息
     movl 8(%esp), %eax
     movl 4(%eax), %ebx
     movl 8(%eax), %ecx

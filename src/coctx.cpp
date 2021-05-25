@@ -108,17 +108,20 @@ int coctx_make(coctx_t* ctx, coctx_pfn_t pfn, const void* s, const void* s1) {
 }
 #elif defined(__x86_64__)
 int coctx_make(coctx_t* ctx, coctx_pfn_t pfn, const void* s, const void* s1) {
+  //获得栈顶地址
   char* sp = ctx->ss_sp + ctx->ss_size - sizeof(void*);
   sp = (char*)((unsigned long)sp & -16LL);
-
+  //初始化寄存器
   memset(ctx->regs, 0, sizeof(ctx->regs));
+  //定义保存返回地址，其在栈顶
   void** ret_addr = (void**)(sp);
+  //保存传入的函数pfn为返回地址
   *ret_addr = (void*)pfn;
-
+  //保存regs[13]为当前协程的栈顶，以便下次恢复
   ctx->regs[kRSP] = sp;
-
+  //regs[9]为执行函数的地址
   ctx->regs[kRETAddr] = (char*)pfn;
-
+  //regs[7]为当前协程对象地址
   ctx->regs[kRDI] = (char*)s;
   ctx->regs[kRSI] = (char*)s1;
   return 0;
