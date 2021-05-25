@@ -27,14 +27,16 @@ struct coctx_param_t
 };
 struct coctx_t
 {
+	//regs 寄存器信息，i386下为8个，其他为14个
 #if defined(__i386__)
 	void *regs[ 8 ];
 #else
 	void *regs[ 14 ];
 #endif
+	//协程栈大小
 	size_t ss_size;
+	//指向协程栈的指针
 	char *ss_sp;
-	
 };
 
 int coctx_init( coctx_t *ctx );
